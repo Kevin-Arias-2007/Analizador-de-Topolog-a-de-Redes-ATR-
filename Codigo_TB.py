@@ -20,14 +20,18 @@ col_izq, col_der = st.columns([1.2, 1.8])
 
 with col_izq:
     st.subheader("1. Configuración")
-    n = st.number_input("Ingrese la cantidad de nodos n:", min_value=4, max_value=12, value=st.session_state.n, step=1)
+    
+    n = st.number_input("Ingrese la cantidad de nodos n (entre 4 y 12):", value=st.session_state.n, step=1)
+    
+    es_valido = (4 <= n <= 12)
+    if not es_valido:
+        st.error("Error: El número está fuera del rango. Por favor, ingrese un valor entre 4 y 12.")
     
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
-        if st.button("Generar Grafo Aleatorio", type="primary", use_container_width=True):
+        if st.button("Generar Grafo Aleatorio", type="primary", use_container_width=True, disabled=not es_valido):
             st.session_state.n = n
             st.session_state.G = nx.gnp_random_graph(n, p=0.4)
-            # AQUI GUARDAMOS LA POSICIÓN FIJA DEL GRAFO
             st.session_state.pos = nx.spring_layout(st.session_state.G)
             st.session_state.paso = 1 
     with col_btn2:
